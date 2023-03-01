@@ -1,0 +1,12 @@
+#floor {
+    width: 1000px;
+    height: 100px;
+    background-color: gray;
+    margin: 10px;
+}
+
+#floorBtnDiv {
+    width: 100px;
+    height: 100px;
+    margin: 10px;
+}
