@@ -1,12 +1,38 @@
-#floor {
+.floor {
     width: 1000px;
     height: 100px;
     background-color: gray;
     margin: 10px;
+    position: relative;
 }
 
 #floorBtnDiv {
     width: 100px;
     height: 100px;
     margin: 10px;
+}
+
+.lift {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    background-color: navy;
+    transition: all 2.5s;
+}
+
+.leftDoor {
+    position: absolute;
+    width: 50%;
+    height: 100%;
+    background-color: greenyellow;
+    border: 2px solid black;
+}
+
+.rightDoor {
+    position: absolute;
+    width: 50%;
+    height: 100%;
+    left: 50%;
+    background-color: greenyellow;
+    border: 2px solid black;
 }
