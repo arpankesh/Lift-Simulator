@@ -1,4 +1,4 @@
-let reqQueue = [];
+let liftReqQueue = [];
 
 let generateBtn = document.getElementById("generate");
 generateBtn.addEventListener("click", () => {
@@ -7,6 +7,9 @@ generateBtn.addEventListener("click", () => {
     if (!Number.isInteger(numFloors) || !Number.isInteger(numLifts)) {
         alert("Please enter an integer value for both the number of floors and lifts");
     } else {
+        const headerElement = document.getElementById("header");
+        headerElement.style.visibility = "hidden";
+
         const floorContainer = document.getElementById("floor-container");
         const btnContainer = document.getElementById("btn-container");
 
@@ -23,7 +26,7 @@ generateBtn.addEventListener("click", () => {
             upBtn.setAttribute("floorNo", `${numFloors - f + 1}`);
             upBtn.addEventListener("click", (e) => {
                 const btnEle = e.target;
-                animateLift(btnEle.getAttribute("floorNo"));
+                liftReqQueue.push(btnEle.getAttribute("floorNo"));
             });
 
             const downBtn = document.createElement("button");
@@ -34,7 +37,7 @@ generateBtn.addEventListener("click", () => {
             downBtn.setAttribute("floorNo", `${numFloors - f + 1}`);
             downBtn.addEventListener("click", (e) => {
                 const btnEle = e.target;
-                animateLift(btnEle.getAttribute("floorNo"));
+                liftReqQueue.push(btnEle.getAttribute("floorNo"));
             });
 
             btnsDiv.setAttribute("id", "floorBtnDiv");
@@ -77,10 +80,6 @@ generateBtn.addEventListener("click", () => {
             const floor1 = document.getElementById("floor1");
             floor1.appendChild(liftElement);
         }
-
-        // const targetFloor = 2;
-        // const presentLift = document.getElementById(`lift${targetFloor}`);
-        // console.log(presentLift);
     }
 });
 
@@ -123,7 +122,6 @@ function animateLift(targetFloor) {
     setTimeout(() => {
         freeLift.setAttribute("status", "free");
         console.log("STO isLiftFree", freeLift);
-        console.log("distance", distBetweenTargetFloorAndLift);
     }, 2000 * Math.abs(distBetweenTargetFloorAndLift) + 5000);
 }
 
@@ -134,4 +132,31 @@ function slidingDoorsAnimation(availableLift) {
         availableLift.children[0].classList.remove("leftDoorSlide");
         availableLift.children[1].classList.remove("rightDoorSlide");
     }, 2500);
+}
+
+function getAnyLiftFree() {
+    const lifts = Array.from(document.querySelectorAll(".lift"));
+    const freeLift = lifts.find((lift) => {
+        const status = lift.getAttribute("status");
+        return status == "free";
+    });
+    console.log("Free Lift", freeLift);
+    if (freeLift) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+setInterval(checkReqQueue, 100);
+function checkReqQueue() {
+    if (!liftReqQueue.length) {
+        return;
+    } else {
+        if (getAnyLiftFree()) {
+            animateLift(liftReqQueue.shift());
+        } else {
+            return;
+        }
+    }
 }
