@@ -1,3 +1,5 @@
+let reqQueue = [];
+
 let generateBtn = document.getElementById("generate");
 generateBtn.addEventListener("click", () => {
     let numFloors = parseInt(document.getElementById("nfloors").value);
@@ -7,6 +9,8 @@ generateBtn.addEventListener("click", () => {
     } else {
         const floorContainer = document.getElementById("floor-container");
         const btnContainer = document.getElementById("btn-container");
+
+        // creating buttons
         for (let f = 1; f <= numFloors; f++) {
             const btnsDiv = document.createElement("div");
             btnsDiv.classList.add("d-flex", "flex-column", "justify-content-evenly");
@@ -16,12 +20,22 @@ generateBtn.addEventListener("click", () => {
             upBtn.type = "button";
             upBtn.classList.add("btn", "btn-success", "btn-sm");
             upBtn.setAttribute("id", `upBtn${numFloors - f + 1}`);
+            upBtn.setAttribute("floorNo", `${numFloors - f + 1}`);
+            upBtn.addEventListener("click", (e) => {
+                const btnEle = e.target;
+                animateLift(btnEle.getAttribute("floorNo"));
+            });
 
             const downBtn = document.createElement("button");
             downBtn.innerHTML = "DOWN";
             downBtn.type = "button";
             downBtn.classList.add("btn", "btn-danger", "btn-sm");
             downBtn.setAttribute("id", `downBtn${numFloors - f + 1}`);
+            downBtn.setAttribute("floorNo", `${numFloors - f + 1}`);
+            downBtn.addEventListener("click", (e) => {
+                const btnEle = e.target;
+                animateLift(btnEle.getAttribute("floorNo"));
+            });
 
             btnsDiv.setAttribute("id", "floorBtnDiv");
             if (f !== 1) {
@@ -32,6 +46,8 @@ generateBtn.addEventListener("click", () => {
             }
             btnContainer.appendChild(btnsDiv);
         }
+
+        // creating floors
         for (let f = 1; f <= numFloors; f++) {
             const floorElemnet = document.createElement("div");
             floorElemnet.setAttribute("id", `floor${numFloors - f + 1}`);
@@ -39,11 +55,13 @@ generateBtn.addEventListener("click", () => {
             floorContainer.appendChild(floorElemnet);
         }
 
+        // creating lifts
         for (let l = 1; l <= numLifts; l++) {
-            console.log("Hello");
             const liftElement = document.createElement("div");
             liftElement.setAttribute("id", `lift${l}`);
             liftElement.classList.add("lift");
+            liftElement.setAttribute("floorNo", "1");
+            liftElement.setAttribute("status", "free");
             liftElement.style.left = `${(l - 1) * 120 + 20}px`;
 
             const leftDoor = document.createElement("div");
@@ -59,18 +77,61 @@ generateBtn.addEventListener("click", () => {
             const floor1 = document.getElementById("floor1");
             floor1.appendChild(liftElement);
         }
-    }
-    const lift1 = document.getElementById("lift1");
-    console.log(lift1.parentElement.previousSibling);
 
-    const upBtn1 = document.getElementById("upBtn1");
-    console.log(upBtn1);
-    upBtn1.addEventListener("click", () => {
-        console.log("Hi");
-        lift1.parentElement = lift1.parentElement.previousSibling;
-        console.log(lift1.parentElement);
-        lift1.style.transform = "translate3d(0,-110px, 0)";
-    })
+        // const targetFloor = 2;
+        // const presentLift = document.getElementById(`lift${targetFloor}`);
+        // console.log(presentLift);
+    }
 });
 
+// Lift animation
+function animateLift(targetFloor) {
+    console.log("TargetFloor", targetFloor);
+    const lifts = Array.from(document.querySelectorAll(".lift"));
+    console.log(lifts);
+    const isLiftOnTarget = lifts.find((lift) => {
+        const status = lift.getAttribute("status");
+        const floor = lift.getAttribute("floorNo");
+        return (status == "free" && floor == targetFloor);
+    });
+    if (isLiftOnTarget) {
+        console.log("Lift already there");
+        slidingDoorsAnimation(isLiftOnTarget);
+        return;
+    }
 
+    const freeLift = lifts.find((lift) => {
+        const status = lift.getAttribute("status");
+        return status == "free";
+    });
+    console.log("Free Lift", freeLift);
+
+    // moving any lift if free
+    const distBetweenTargetFloorAndLift = targetFloor - freeLift.getAttribute("floorNo");
+    console.log(distBetweenTargetFloorAndLift);
+    freeLift.setAttribute("status", "occupied");
+    freeLift.setAttribute("floorNo", targetFloor);
+    freeLift.style.transition = `all ${2 * Math.abs(distBetweenTargetFloorAndLift)}s linear`;
+    freeLift.style.transform = `translate3d(0,${-110 * (targetFloor - 1)}px,0)`;
+
+    // Make the doors toggle
+    setTimeout(() => {
+        slidingDoorsAnimation(freeLift);
+    }, Math.abs(distBetweenTargetFloorAndLift) * 2000);
+
+    //Make the status of lift free after certain time
+    setTimeout(() => {
+        freeLift.setAttribute("status", "free");
+        console.log("STO isLiftFree", freeLift);
+        console.log("distance", distBetweenTargetFloorAndLift);
+    }, 2000 * Math.abs(distBetweenTargetFloorAndLift) + 5000);
+}
+
+function slidingDoorsAnimation(availableLift) {
+    availableLift.children[0].classList.add("leftDoorSlide");
+    availableLift.children[1].classList.add("rightDoorSlide");
+    setTimeout(() => {
+        availableLift.children[0].classList.remove("leftDoorSlide");
+        availableLift.children[1].classList.remove("rightDoorSlide");
+    }, 2500);
+}

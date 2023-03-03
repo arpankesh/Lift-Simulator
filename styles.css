@@ -17,22 +17,34 @@
     width: 100px;
     height: 100px;
     background-color: navy;
-    transition: all 2.5s;
+    overflow: hidden;
 }
 
 .leftDoor {
+    display: block;
     position: absolute;
     width: 50%;
     height: 100%;
     background-color: greenyellow;
     border: 2px solid black;
+    transition: all 2.5s;
 }
 
 .rightDoor {
+    display: block;
     position: absolute;
     width: 50%;
     height: 100%;
     left: 50%;
     background-color: greenyellow;
     border: 2px solid black;
+    transition: all 2.5s;
+}
+
+.leftDoorSlide {
+    transform: translate(-100%);
+}
+
+.rightDoorSlide {
+    transform: translate(100%);
 }
