@@ -99,11 +99,7 @@ function animateLift(targetFloor) {
         return;
     }
 
-    const freeLift = lifts.find((lift) => {
-        const status = lift.getAttribute("status");
-        return status == "free";
-    });
-    console.log("Free Lift", freeLift);
+    const freeLift = getClosestLiftFree(targetFloor);
 
     // moving any lift if free
     const distBetweenTargetFloorAndLift = targetFloor - freeLift.getAttribute("floorNo");
@@ -159,4 +155,29 @@ function checkReqQueue() {
             return;
         }
     }
+}
+
+function getClosestLiftFree(targetFloor) {
+
+    const lifts = Array.from(document.querySelectorAll(".lift"));
+    const freeLifts = lifts.filter((lift) => {
+        const status = lift.getAttribute("status");
+        return status == "free";
+    });
+
+    let min = Number.MAX_VALUE;
+    let nearestLiftElement = lifts[0]; //default
+    function getDistanceFromTargetFloor(lift) {
+        const liftFloor = lift.getAttribute("floorNo");
+        console.log(liftFloor);
+        const distFromTargetFloor = Math.abs(liftFloor - targetFloor);
+        if (distFromTargetFloor < min) {
+            min = distFromTargetFloor;
+            nearestLiftElement = lift;
+        }
+    }
+    freeLifts.forEach(getDistanceFromTargetFloor);
+    console.log("Free Lift", nearestLiftElement);
+
+    return nearestLiftElement;
 }
