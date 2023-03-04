@@ -65,7 +65,20 @@ generateBtn.addEventListener("click", () => {
             liftElement.classList.add("lift");
             liftElement.setAttribute("floorNo", "1");
             liftElement.setAttribute("status", "free");
-            liftElement.style.left = `${(l - 1) * 120 + 20}px`;
+            // liftElement.style.width = `{100/(1.5 * ${numLifts})}%`;
+            let x = 100 / (1.2 * numLifts);
+            liftElement.style.width = `${x}%`;
+            let width = liftElement.style.width;
+            liftElement.style.maxWidth = "10%";
+            width = parseInt(width.substring(0, width.length - 1));
+            console.log(width);
+            if (width >= 10) {
+                width = 10;
+                liftElement.style.left = `${(l - 1) * (1.2 * width) + 1}%`;
+            } else {
+                liftElement.style.left = `${(l - 1) * (1.2 * width) + 1}%`;
+            }
+            console.log(liftElement.style.left);
 
             const leftDoor = document.createElement("div");
             const rightDoor = document.createElement("div");
@@ -91,11 +104,19 @@ function animateLift(targetFloor) {
     const isLiftOnTarget = lifts.find((lift) => {
         const status = lift.getAttribute("status");
         const floor = lift.getAttribute("floorNo");
-        return (status == "free" && floor == targetFloor);
+        return (floor == targetFloor);
     });
     if (isLiftOnTarget) {
-        console.log("Lift already there");
-        slidingDoorsAnimation(isLiftOnTarget);
+        const status = isLiftOnTarget.getAttribute("status");
+        if (status == "free") {
+            console.log("Lift already there");
+            isLiftOnTarget.setAttribute("status", "occupied");
+            slidingDoorsAnimation(isLiftOnTarget);
+            setTimeout(() => {
+                isLiftOnTarget.setAttribute("status", "free");
+                console.log("STO isLiftFree", freeLift);
+            }, 5000);
+        }
         return;
     }
 
