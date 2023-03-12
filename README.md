@@ -13,8 +13,10 @@
 ## *TODO :*
 1. Implementing the logic of direction of motion to the lifts
 
+<hr>
 <p align="center">
-  <h1>Below are the images for the app</h1>
+  <h3>Below are the images for the app</h3>
   <img src="screenshots\Screenshot (328).png" title="hover text">
+  <hr>
   <img src="screenshots\Screenshot (330).png" title="hover text">
 </p>
