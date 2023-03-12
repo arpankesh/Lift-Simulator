@@ -13,4 +13,4 @@
 ## *TODO :*
 1. Implementing the logic of direction of motion to the lifts
 
-![img1](C:\Users\Arpan Kesh\Pictures\Screenshots\Screenshot (328).png)
+![img1](.screenshots\Screenshot (328).png)
