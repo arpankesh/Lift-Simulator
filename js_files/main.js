@@ -8,7 +8,7 @@ generateBtn.addEventListener("click", () => {
         alert("Please enter an integer value for both the number of floors and lifts");
     } else {
         const headerElement = document.getElementById("header");
-        headerElement.style.visibility = "hidden";
+        headerElement.style.display = "none";
 
         const floorContainer = document.getElementById("floor-container");
         const btnContainer = document.getElementById("btn-container");
@@ -16,12 +16,11 @@ generateBtn.addEventListener("click", () => {
         // creating buttons
         for (let f = 1; f <= numFloors; f++) {
             const btnsDiv = document.createElement("div");
-            btnsDiv.classList.add("d-flex", "flex-column", "justify-content-evenly");
 
             const upBtn = document.createElement("button");
-            upBtn.innerHTML = "UP";
+            upBtn.innerHTML = "▲";
             upBtn.type = "button";
-            upBtn.classList.add("btn", "btn-success", "btn-sm");
+            upBtn.classList.add("upBtn");
             upBtn.setAttribute("id", `upBtn${numFloors - f + 1}`);
             upBtn.setAttribute("floorNo", `${numFloors - f + 1}`);
             upBtn.addEventListener("click", (e) => {
@@ -30,15 +29,19 @@ generateBtn.addEventListener("click", () => {
             });
 
             const downBtn = document.createElement("button");
-            downBtn.innerHTML = "DOWN";
+            downBtn.innerHTML = "▼";
             downBtn.type = "button";
-            downBtn.classList.add("btn", "btn-danger", "btn-sm");
+            downBtn.classList.add("downBtn");
             downBtn.setAttribute("id", `downBtn${numFloors - f + 1}`);
             downBtn.setAttribute("floorNo", `${numFloors - f + 1}`);
             downBtn.addEventListener("click", (e) => {
                 const btnEle = e.target;
                 liftReqQueue.push(btnEle.getAttribute("floorNo"));
             });
+
+            const floorNumberDiv = document.createElement("div");
+            floorNumberDiv.innerHTML = `<b>Floor ${numFloors - f + 1}</b>`;
+            floorNumberDiv.style.textAlign = "center";
 
             btnsDiv.setAttribute("id", "floorBtnDiv");
             if (f !== 1) {
@@ -47,6 +50,7 @@ generateBtn.addEventListener("click", () => {
             if (f !== numFloors) {
                 btnsDiv.appendChild(downBtn);
             }
+            btnsDiv.appendChild(floorNumberDiv);
             btnContainer.appendChild(btnsDiv);
         }
 
@@ -65,7 +69,6 @@ generateBtn.addEventListener("click", () => {
             liftElement.classList.add("lift");
             liftElement.setAttribute("floorNo", "1");
             liftElement.setAttribute("status", "free");
-            // liftElement.style.width = `{100/(1.5 * ${numLifts})}%`;
             let x = 100 / (1.2 * numLifts);
             liftElement.style.width = `${x}%`;
             let width = liftElement.style.width;
