@@ -136,13 +136,13 @@ function animateLift(targetFloor) {
     // Make the doors toggle
     setTimeout(() => {
         slidingDoorsAnimation(freeLift);
-    }, Math.abs(distBetweenTargetFloorAndLift) * 2000);
+    }, Math.abs(distBetweenTargetFloorAndLift) * 2000 + 300);
 
     //Make the status of lift free after certain time
     setTimeout(() => {
         freeLift.setAttribute("status", "free");
         console.log("STO isLiftFree", freeLift);
-    }, 2000 * Math.abs(distBetweenTargetFloorAndLift) + 5000);
+    }, 2000 * Math.abs(distBetweenTargetFloorAndLift) + 5000 + 300);
 }
 
 function slidingDoorsAnimation(availableLift) {
